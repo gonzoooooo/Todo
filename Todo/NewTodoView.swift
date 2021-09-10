@@ -1,0 +1,141 @@
+//
+//  NewTodoView.swift
+//  NewTodoView
+//
+//  Created by gonzoooooo on 2021/09/03.
+//
+
+import SwiftUI
+
+struct NewTodoView: View {
+    @Environment(\.presentationMode)
+    private var presentationMode
+
+    @Environment(\.managedObjectContext)
+    private var viewContext
+
+    @State
+    var name = ""
+
+    @State
+    var isFlagged = false
+
+    @State
+    var isNotified = false
+
+    @State
+    var notifiedDate: Date = Date()
+
+    let todoProvider: TodoProvider = .shared
+
+    let notificationClient: NotificationClient = .shared
+
+    private var isDisabledRegisterButton: Bool {
+        return name.isEmpty
+    }
+
+    var body: some View {
+        List {
+            Section {
+                TextField("タスク名", text: $name, prompt: Text("タスク名"))
+            }
+
+            Section {
+                Toggle("通知", isOn: $isNotified.animation())
+
+                if isNotified {
+                    HStack(spacing: 0) {
+//                        Text("日時")
+
+                        // FIXME: DatePicker が右端に配置されないためのワークアラウンド
+                        Spacer()
+                            .frame(maxWidth: .infinity)
+
+                        DatePicker(
+                            "",
+                            selection: $notifiedDate,
+                            displayedComponents: .date
+                        )
+
+                        DatePicker(
+                            "",
+                            selection: $notifiedDate,
+                            displayedComponents: .hourAndMinute
+                        )
+                    }
+                }
+            }
+
+            Section {
+                Toggle(isOn: $isFlagged) {
+                    Text("フラグ")
+                }
+            }
+        }
+        .navigationTitle("新規タスク")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button {
+                    Task {
+                        await register()
+                    }
+                } label: {
+                    Text("登録")
+                }
+                .disabled(isDisabledRegisterButton)
+            }
+
+            ToolbarItemGroup(placement: .navigationBarLeading) {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Text("キャンセル")
+                }
+            }
+        }
+    }
+
+    private func register() async {
+        do {
+            let id = UUID()
+
+            try await todoProvider.add(
+                id: id,
+                name: name,
+                notifiedDate: isNotified ? notifiedDate : nil,
+                isFlagged: isFlagged
+            )
+
+            if isNotified {
+                notificationClient.register(
+                    identifier: id,
+                    name: name,
+                    date: notifiedDate
+                )
+            }
+
+            presentationMode.wrappedValue.dismiss()
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+}
+
+struct NewTodoView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            NavigationView {
+                NewTodoView(name: "Study SwiftUI", isNotified: true, notifiedDate: Date())
+                    .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            }
+            .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
+
+            NavigationView {
+                NewTodoView(name: "Study SwiftUI", isNotified: true, notifiedDate: Date())
+                    .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            }
+            .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro Max"))
+        }
+    }
+}
