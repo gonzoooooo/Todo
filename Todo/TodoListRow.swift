@@ -44,10 +44,10 @@ struct TodoListRow: View {
                     HStack {
                         Image(systemName: "clock")
                             .font(.caption)
-                            .foregroundColor(Color(.systemRed))
+                            .foregroundColor(.systemRed)
                         Text(dateString(from: notifiedDate))
                             .font(.caption)
-                            .foregroundColor(Color(.systemRed))
+                            .foregroundColor(.systemRed)
                     }
                     .padding(.bottom, 4)
                 }
@@ -70,7 +70,7 @@ struct TodoListRow: View {
                         .font(.title2)
                 } else {
                     Image(systemName: "flag.circle")
-                        .foregroundColor(Color(UIColor.systemGray))
+                        .foregroundColor(.systemGray)
                         .font(.title2)
                 }
             }
