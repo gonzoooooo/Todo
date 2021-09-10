@@ -20,6 +20,7 @@ struct TodoApp: App {
                 ContentView()
                     .environment(\.managedObjectContext, persistenceController.container.viewContext)
             }
+            .tint(.accentColor)
         }
     }
 }
