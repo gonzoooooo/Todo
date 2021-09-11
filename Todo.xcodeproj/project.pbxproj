@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2330A6A326EB3C260060B98E /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2330A6A226EB3C260060B98E /* Color+Extension.swift */; };
+		2330A6A626EB47650060B98E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2330A6A826EB47650060B98E /* Localizable.strings */; };
 		4C04364626E6094900CDA1FE /* TodoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C04364526E6094900CDA1FE /* TodoListView.swift */; };
 		4C6A874F26E9825F00704716 /* EditButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A874E26E9825F00704716 /* EditButton.swift */; };
 		4C6A875126E9829200704716 /* SelectButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6A875026E9829200704716 /* SelectButton.swift */; };
@@ -50,6 +51,8 @@
 
 /* Begin PBXFileReference section */
 		2330A6A226EB3C260060B98E /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
+		2330A6A726EB47650060B98E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2330A6A926EB47660060B98E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4C04364526E6094900CDA1FE /* TodoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListView.swift; sourceTree = "<group>"; };
 		4C6A874E26E9825F00704716 /* EditButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditButton.swift; sourceTree = "<group>"; };
 		4C6A875026E9829200704716 /* SelectButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectButton.swift; sourceTree = "<group>"; };
@@ -142,6 +145,7 @@
 				4C6A875426EACE8000704716 /* NotificationHelper.swift */,
 				4C8C77DA26E1DFFE00BB3D24 /* Assets.xcassets */,
 				4C8C77E126E1DFFE00BB3D24 /* Todo.xcdatamodeld */,
+				2330A6A826EB47650060B98E /* Localizable.strings */,
 				4C8C77DC26E1DFFE00BB3D24 /* Preview Content */,
 			);
 			path = Todo;
@@ -258,6 +262,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
 			);
 			mainGroup = 4C8C77CA26E1DFFC00BB3D24;
 			productRefGroup = 4C8C77D426E1DFFD00BB3D24 /* Products */;
@@ -277,6 +282,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C8C77DE26E1DFFE00BB3D24 /* Preview Assets.xcassets in Resources */,
+				2330A6A626EB47650060B98E /* Localizable.strings in Resources */,
 				4C8C77DB26E1DFFE00BB3D24 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -353,6 +359,18 @@
 			targetProxy = 4C8C77F326E1DFFE00BB3D24 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2330A6A826EB47650060B98E /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2330A6A726EB47650060B98E /* ja */,
+				2330A6A926EB47660060B98E /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		4C8C77FA26E1DFFE00BB3D24 /* Debug */ = {

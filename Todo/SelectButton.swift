@@ -40,11 +40,15 @@ struct SelectButton: View {
 struct SelectButton_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            SelectButton(mode: .constant(.active))
-                .previewLayout(.fixed(width: 320, height: 44))
+            ForEach(["en-US", "ja-JP"], id: \.self) { lang in
+                SelectButton(mode: .constant(.active))
+                    .environment(\.locale, Locale(identifier: lang))
+                    .previewLayout(.fixed(width: 320, height: 44))
 
-            SelectButton(mode: .constant(.inactive))
-                .previewLayout(.fixed(width: 320, height: 44))
-        }
+                SelectButton(mode: .constant(.inactive))
+                    .environment(\.locale, Locale(identifier: lang))
+                    .previewLayout(.fixed(width: 320, height: 44))
+                }
+            }
     }
 }

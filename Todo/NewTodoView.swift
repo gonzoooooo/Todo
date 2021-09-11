@@ -37,11 +37,11 @@ struct NewTodoView: View {
     var body: some View {
         List {
             Section {
-                TextField("タスク名", text: $name, prompt: Text("タスク名"))
+                TextField("Task Name", text: $name, prompt: Text("Task Name"))
             }
 
             Section {
-                Toggle("通知", isOn: $isNotified.animation())
+                Toggle("Notification", isOn: $isNotified.animation())
 
                 if isNotified {
                     HStack(spacing: 0) {
@@ -68,11 +68,11 @@ struct NewTodoView: View {
 
             Section {
                 Toggle(isOn: $isFlagged) {
-                    Text("フラグ")
+                    Text("Flag")
                 }
             }
         }
-        .navigationTitle("新規タスク")
+        .navigationTitle("New Task")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -81,7 +81,7 @@ struct NewTodoView: View {
                         await register()
                     }
                 } label: {
-                    Text("登録")
+                    Text("Add")
                 }
                 .disabled(isDisabledRegisterButton)
             }
@@ -90,7 +90,7 @@ struct NewTodoView: View {
                 Button {
                     presentationMode.wrappedValue.dismiss()
                 } label: {
-                    Text("キャンセル")
+                    Text("Cancel")
                 }
             }
         }
@@ -126,9 +126,21 @@ struct NewTodoView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             NavigationView {
+                NewTodoView()
+                    .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            }
+            .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
+
+            NavigationView {
                 NewTodoView(name: "Study SwiftUI", isNotified: true, notifiedDate: Date())
                     .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
             }
+            .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
+
+            NavigationView {
+                NewTodoView()
+            }
+            .environment(\.locale, Locale(identifier: "ja-JP"))
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
 
             NavigationView {

@@ -108,7 +108,7 @@ struct TodoListView: View {
                 deleteItems(ids: selection)
                 selection = []
             } label: {
-                Text("Remove")
+                Text("Remove \(selection.count) tasks")
             }
             Button(role: .cancel) {
                 presentedConfirmationForRemoveTasks = false
@@ -116,7 +116,7 @@ struct TodoListView: View {
                 Text("Cancel")
             }
         } message: {
-            Text("MESSSAGE")
+            Text("This action cannot be undone.")
         }
     }
 
@@ -157,8 +157,8 @@ struct TodoListView: View {
 }
 
 extension TodoListView {
-    var navigationTitle: String {
-        selection.isEmpty ? "タスク一覧" : "\(selection.count) Selected"
+    var navigationTitle: Text {
+        selection.isEmpty ? Text("Tasks") : Text("\(selection.count) Selected")
     }
 
     @ToolbarContentBuilder
@@ -210,7 +210,7 @@ extension TodoListView {
                     Button {
                         editMode = .active
                     } label: {
-                        Label("選択", systemImage: "checkmark.circle")
+                        Label("Select", systemImage: "checkmark.circle")
                     }
 
                     Button {
@@ -219,9 +219,9 @@ extension TodoListView {
                         }
                     } label: {
                         if isHiddenCompletedTodos {
-                            Label("完了済みを表示", systemImage: "eye")
+                            Label("Show completed tasks", systemImage: "eye")
                         } else {
-                            Label("完了済みを非表示", systemImage: "eye.slash")
+                            Label("Hide completed tasks", systemImage: "eye.slash")
                         }
                     }
                 } label: {
@@ -247,6 +247,7 @@ struct TodoListView_Previews: PreviewProvider {
                     .preferredColorScheme(.dark)
                     .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
             }
+            .environment(\.locale, Locale(identifier: "ja-JP"))
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
             .previewDisplayName("iPhone 12 Mini")
 

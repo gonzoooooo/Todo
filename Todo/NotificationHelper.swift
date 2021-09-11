@@ -10,7 +10,7 @@ import UserNotifications
 
 extension NotificationClient {
     func register(identifier: UUID, name: String, date: Date) {
-        let action = UNNotificationAction(identifier: "CompleteAction", title: "完了", options: .foreground)
+        let action = UNNotificationAction(identifier: "CompleteAction", title: String(localized: "Done"), options: .foreground)
         let categoryIdentifier = "todo"
         let category = UNNotificationCategory(identifier: categoryIdentifier, actions: [action], intentIdentifiers: [])
         notificationCenter.setNotificationCategories([category])

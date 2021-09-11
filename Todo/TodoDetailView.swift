@@ -40,11 +40,11 @@ struct TodoDetailView: View {
     var body: some View {
         List {
             Section {
-                TextField("タスク名", text: $name, prompt: Text("た"))
+                TextField("Task Name", text: $name, prompt: Text("Task Name"))
             }
 
             Section {
-                Toggle("通知", isOn: $isNotified.animation())
+                Toggle("Notification", isOn: $isNotified.animation())
 
                 if isNotified {
                     HStack(spacing: 0) {
@@ -70,12 +70,12 @@ struct TodoDetailView: View {
             Section {
                 HStack {
                     Toggle(isOn: $isFlagged) {
-                        Text("フラグを立てる")
+                        Text("Flag")
                     }
                 }
             }
         }
-        .navigationTitle("タスク")
+        .navigationTitle("Task")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -90,7 +90,7 @@ struct TodoDetailView: View {
                         presentationMode.wrappedValue.dismiss()
                     }
                 } label: {
-                    Text("登録")
+                    Text("Done")
                 }
                 .disabled(isDisabledRegisterButton)
             }
@@ -99,7 +99,7 @@ struct TodoDetailView: View {
                 Button {
                     presentationMode.wrappedValue.dismiss()
                 } label: {
-                    Text("キャンセル")
+                    Text("Cancel")
                 }
             }
         }
@@ -136,8 +136,21 @@ struct TodoDetailView_Previews: PreviewProvider {
                     notifiedDate: Date(),
                     isFlagged: todo.isFlagged
                 )
-                .environment(\.locale, Locale(identifier: "ja-JP"))
             }
+            .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
+            .previewDisplayName("iPhone 12 Mini")
+
+             NavigationView {
+                TodoDetailView(
+                    id: todo.id,
+                    name: "",
+                    isCompleted: todo.isCompleted,
+                    isNotified: true,
+                    notifiedDate: Date(),
+                    isFlagged: todo.isFlagged
+                )
+            }
+            .environment(\.locale, Locale(identifier: "ja-JP"))
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
             .previewDisplayName("iPhone 12 Mini")
 
@@ -150,8 +163,8 @@ struct TodoDetailView_Previews: PreviewProvider {
                     notifiedDate: Date(),
                     isFlagged: todo.isFlagged
                 )
-                .environment(\.locale, Locale(identifier: "ja-JP"))
             }
+            .environment(\.locale, Locale(identifier: "ja-JP"))
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro Max"))
             .previewDisplayName("iPhone 12 Pro Max")
         }

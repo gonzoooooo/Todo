@@ -101,6 +101,7 @@ struct TodoListRow_Previews: PreviewProvider {
                 .padding(12)
 
             TodoListRow(todo: todo2, flagTapAction: {})
+                .environment(\.locale, Locale(identifier: "ja-JP"))
                 .previewLayout(.fixed(width: 300, height: 100))
                 .padding(12)
 

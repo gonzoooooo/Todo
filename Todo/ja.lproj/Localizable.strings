@@ -1,0 +1,37 @@
+"Task Name" = "タスク名";
+
+"Notification" = "通知";
+
+"Flag" = "フラグ";
+
+"New Task" = "新規タスク";
+
+"Add" = "追加";
+
+"Cancel" = "キャンセル";
+
+"Done" = "完了";
+
+"Task" = "タスク";
+
+"Tasks" = "タスク一覧";
+
+"Select" = "選択";
+
+"Hide completed tasks" = "完了済みタスクを非表示";
+
+"Show completed tasks" = "完了済みタスクを表示";
+
+"%lld Selected" = "%d件を選択中";
+
+"This action cannot be undone." = "この操作は取り消せません。";
+
+"Remove" = "削除";
+
+"Remove %lld tasks" = "%lld 件のタスクを削除";
+
+"Edit" = "編集";
+
+"Select All" = "すべてを選択";
+
+"Deselect All" = "すべてを選択解除";
