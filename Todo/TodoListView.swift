@@ -45,6 +45,8 @@ struct TodoListView: View {
                     presentedTodo = todo
                 } label: {
                     TodoListRow(todo: todo) {
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+
                         Task {
                             do {
                                 try await todoProvider.update(
