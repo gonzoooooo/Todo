@@ -75,6 +75,34 @@ struct TodoListView: View {
                             }
                         }
                     }
+                    .contextMenu(menuItems: {
+                        Button {
+                            Task {
+                                try? await todoProvider.add(
+                                    id: UUID(),
+                                    name: todo.name,
+                                    notifiedDate: todo.notifiedDate,
+                                    isFlagged: todo.isFlagged)
+                            }
+                        } label: {
+                            HStack {
+                                Text("Duplicate")
+                                Spacer()
+                                Image(systemName: "plus.square.on.square")
+                            }
+                        }
+
+                        Button(role: .destructive) {
+                            Task {
+                                // FIXME: Crash
+                                deleteItems(ids: [todo.id])
+                            }
+                        } label: {
+                            HStack {
+                                Label("Remove", systemImage: "trash")
+                            }
+                        }
+                    })
                     .environment(\.editMode, $editMode)
                 }
             }
