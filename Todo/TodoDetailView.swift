@@ -81,7 +81,7 @@ struct TodoDetailView: View {
             }
 
             Section {
-                Button {
+                Button(role: .destructive) {
                     presentedConfirmationForRemoveTask.toggle()
                 } label: {
                     Text("Remove Task")
@@ -128,7 +128,7 @@ struct TodoDetailView: View {
             }
 
             ToolbarItemGroup(placement: .navigationBarLeading) {
-                Button {
+                Button(role: .cancel) {
                     presentationMode.wrappedValue.dismiss()
                 } label: {
                     Text("Cancel")

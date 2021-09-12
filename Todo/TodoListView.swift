@@ -238,7 +238,7 @@ extension TodoListView {
 
         ToolbarItemGroup(placement: .bottomBar) {
             if editMode == .active {
-                Button {
+                Button(role: .destructive) {
                     presentedConfirmationForRemoveTasks.toggle()
                 } label: {
                     Image(systemName: "trash")

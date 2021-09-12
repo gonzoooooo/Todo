@@ -87,7 +87,7 @@ struct NewTodoView: View {
             }
 
             ToolbarItemGroup(placement: .navigationBarLeading) {
-                Button {
+                Button(role: .cancel) {
                     presentationMode.wrappedValue.dismiss()
                 } label: {
                     Text("Cancel")

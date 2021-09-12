@@ -13,7 +13,7 @@ struct EditButton: View {
     var action: () -> Void = {}
 
     var body: some View {
-        Button {
+        Button(role: role) {
             withAnimation {
                 if editMode == .active {
                     action()
@@ -30,6 +30,10 @@ struct EditButton: View {
                 Text("Edit")
             }
         }
+    }
+
+    private var role: ButtonRole? {
+        editMode == .active ? .cancel : nil
     }
 }
 
