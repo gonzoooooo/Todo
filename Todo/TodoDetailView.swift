@@ -29,9 +29,14 @@ struct TodoDetailView: View {
     @State
     var isFlagged: Bool
 
+    @State
+    private var presentedConfirmationForRemoveTask = false
+
     var todoProvider: TodoProvider = .shared
 
     let notificationClient: NotificationClient = .shared
+
+    var deleteTaskAction: (_ id: UUID) -> Void = { _ in }
 
     private var isDisabledRegisterButton: Bool {
         return name.isEmpty
@@ -74,6 +79,33 @@ struct TodoDetailView: View {
                     }
                 }
             }
+
+            Section {
+                Button {
+                    presentedConfirmationForRemoveTask.toggle()
+                } label: {
+                    Text("Remove Task")
+                        .foregroundColor(.systemRed)
+                }
+            }
+        }
+        .confirmationDialog(
+            Text("Remove Task"),
+            isPresented: $presentedConfirmationForRemoveTask
+        ) {
+            Button(role: .destructive) {
+                deleteTaskAction(id)
+                presentationMode.wrappedValue.dismiss()
+            } label: {
+                Text("Remove task")
+            }
+            Button(role: .cancel) {
+                presentedConfirmationForRemoveTask = false
+            } label: {
+                Text("Cancel")
+            }
+        } message: {
+            Text("This action cannot be undone.")
         }
         .navigationTitle("Task")
         .navigationBarTitleDisplayMode(.inline)

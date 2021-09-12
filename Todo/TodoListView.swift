@@ -96,8 +96,9 @@ struct TodoListView: View {
                     isCompleted: todo.isCompleted,
                     isNotified: todo.notifiedDate != nil,
                     notifiedDate: todo.notifiedDate ?? Date(),
-                    isFlagged: todo.isFlagged
-                )
+                    isFlagged: todo.isFlagged) { id in
+                        deleteItems(ids: [id])
+                    }
             }
         }
         .confirmationDialog(
@@ -144,14 +145,28 @@ struct TodoListView: View {
     }
 
     private func deleteItems(offsets: IndexSet) {
+        // FIXME: withAnimation is unused
         withAnimation {
-            todoProvider.delete(identifiedBy: offsets.map { todos[$0].objectID })
+            Task {
+                do {
+                    try await todoProvider.delete(identifiedBy: offsets.map { todos[$0].objectID })
+                } catch {
+                    print("error: \(error)")
+                }
+            }
         }
     }
 
     private func deleteItems(ids: Set<UUID>) {
+        // FIXME: withAnimation is unused
         withAnimation {
-            todoProvider.delete(ids: ids)
+            Task {
+                do {
+                    try await todoProvider.delete(ids: ids)
+                } catch {
+                    print("error: \(error)")
+                }
+            }
         }
     }
 }

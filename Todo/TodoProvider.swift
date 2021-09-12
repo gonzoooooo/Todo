@@ -99,27 +99,36 @@ struct TodoProvider {
 //        }
     }
 
-    func delete(identifiedBy objectIDs: [NSManagedObjectID]) {
+    func delete(identifiedBy objectIDs: [NSManagedObjectID]) async throws {
         let viewContext = persistence.container.viewContext
 
-        viewContext.perform {
+        // FIXME: Should use background view context
+        try await viewContext.perform {
             objectIDs.forEach { objectID in
                 let todo = viewContext.object(with: objectID)
                 viewContext.delete(todo)
             }
+
+            try viewContext.save()
         }
     }
 
-    func delete(ids: Set<UUID>) {
+    func delete(ids: Set<UUID>) async throws {
         let viewContext = persistence.container.viewContext
-        let request = Todo.fetchRequest()
+        
+        // FIXME: Should use background view context
+        try await viewContext.perform {
+            let request = Todo.fetchRequest()
 
-        for id in ids {
-            request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+            for id in ids {
+                request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
 
-            guard let todos = try? viewContext.fetch(request) else { continue }
+                guard let todos = try? viewContext.fetch(request) else { continue }
 
-            todos.forEach { viewContext.delete($0) }
+                todos.forEach { viewContext.delete($0) }
+            }
+
+            try viewContext.save()
         }
     }
 
