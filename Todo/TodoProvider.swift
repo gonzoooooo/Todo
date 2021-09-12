@@ -46,17 +46,18 @@ struct TodoProvider {
         isFlagged: Bool
     ) async throws {
         let viewContext = persistence.container.viewContext
-        let todo: Todo = Todo(context: viewContext)
-        todo.id = id
-        todo.name = name
-        todo.notifiedDate = notifiedDate
-        todo.isFlagged = isFlagged
-        todo.createdDate = Date()
-        todo.modifiedDate = Date()
-
-        todo.order = try maxOrder() + 1
 
         try await viewContext.perform {
+            let todo: Todo = Todo(context: viewContext)
+            todo.id = id
+            todo.name = name
+            todo.notifiedDate = notifiedDate
+            todo.isFlagged = isFlagged
+            todo.createdDate = Date()
+            todo.modifiedDate = Date()
+
+            todo.order = try maxOrder() + 1
+
             try viewContext.save()
         }
     }
