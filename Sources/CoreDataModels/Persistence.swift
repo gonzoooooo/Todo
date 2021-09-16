@@ -1,10 +1,3 @@
-//
-//  Persistence.swift
-//  Todo
-//
-//  Created by gonzoooooo on 2021/09/03.
-//
-
 import CoreData
 
 public struct PersistenceController {
@@ -14,8 +7,15 @@ public struct PersistenceController {
 
     public let container: NSPersistentCloudKitContainer
 
-        container = NSPersistentCloudKitContainer(name: "Todo")
+    private let managedObjectModel: NSManagedObjectModel = {
+        let bundle = Bundle.module
+        let URL = bundle.url(forResource: "TodoApp", withExtension: "momd")
+
+        return NSManagedObjectModel(contentsOf: URL!)!
+    }()
+
     public init(inMemory: Bool = false) {
+        container = NSPersistentCloudKitContainer(name: "TodoApp", managedObjectModel: managedObjectModel)
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }

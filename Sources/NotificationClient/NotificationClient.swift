@@ -1,10 +1,3 @@
-//
-//  NotificationClient.swift
-//  NotificationClient
-//
-//  Created by gonzoooooo on 2021/09/09.
-//
-
 import Foundation
 import UserNotifications
 

@@ -1,12 +1,6 @@
-//
-//  TodoProvider.swift
-//  TodoProvider
-//
-//  Created by gonzoooooo on 2021/09/06.
-//
-
 import Foundation
 import CoreData
+import CoreDataModels
 
 public struct TodoProvider {
     public var persistence: PersistenceController = .shared
@@ -116,7 +110,7 @@ public struct TodoProvider {
 
     public func delete(ids: Set<UUID>) async throws {
         let viewContext = persistence.container.viewContext
-        
+
         // FIXME: Should use background view context
         try await viewContext.perform {
             let request = Todo.fetchRequest()

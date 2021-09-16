@@ -5,7 +5,10 @@
 //  Created by gonzoooooo on 2021/09/03.
 //
 
+import AppFeature
+import CoreDataModels
 import SwiftUI
+import TodoFeature
 
 @main
 struct TodoApp: App {
@@ -17,7 +20,7 @@ struct TodoApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                ContentView()
+                TodoListView()
                     .environment(\.managedObjectContext, persistenceController.container.viewContext)
             }
             .tint(.accentColor)

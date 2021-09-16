@@ -1,15 +1,9 @@
-//
-//  NotificationHelper.swift
-//  NotificationHelper
-//
-//  Created by gonzoooooo on 2021/09/10.
-//
-
 import Foundation
+import NotificationClient
 import UserNotifications
 
 public extension NotificationClient {
-    public func register(identifier: UUID, name: String, date: Date) {
+    func register(identifier: UUID, name: String, date: Date) {
         let action = UNNotificationAction(identifier: "CompleteAction", title: String(localized: "Done"), options: .foreground)
         let categoryIdentifier = "todo"
         let category = UNNotificationCategory(identifier: categoryIdentifier, actions: [action], intentIdentifiers: [])

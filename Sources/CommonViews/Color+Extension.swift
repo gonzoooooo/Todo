@@ -1,11 +1,3 @@
-//
-//  Color+Extension.swift
-//  Todo
-//
-//  Created by gonzoooooo on 2021/09/10.
-//  
-//
-
 import SwiftUI
 
 public extension Color {

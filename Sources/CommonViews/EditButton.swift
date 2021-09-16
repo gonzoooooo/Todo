@@ -1,10 +1,3 @@
-//
-//  EditButton.swift
-//  EditButton
-//
-//  Created by gonzoooooo on 2021/09/09.
-//
-
 import SwiftUI
 
 public struct EditButton: View {
