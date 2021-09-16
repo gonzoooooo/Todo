@@ -8,12 +8,12 @@
 import Foundation
 import UserNotifications
 
-final class NotificationClient: NSObject {
+public final class NotificationClient: NSObject {
     public static let shared = NotificationClient()
 
-    let notificationCenter = UNUserNotificationCenter.current()
+    public let notificationCenter = UNUserNotificationCenter.current()
 
-    override init() {
+    public override init() {
         super.init()
         notificationCenter.delegate = self
     }
@@ -28,7 +28,7 @@ final class NotificationClient: NSObject {
         }
     }
 
-    func register(request: UNNotificationRequest) {
+    public func register(request: UNNotificationRequest) {
         notificationCenter.add(request) { error in
             if let error = error {
                 print("error: \(error)")
@@ -36,18 +36,18 @@ final class NotificationClient: NSObject {
         }
     }
 
-    func cancel(id: String) {
+    public func cancel(id: String) {
         notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
     }
 }
 
 extension NotificationClient: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
         return [.banner, .badge, .sound]
 
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         switch response.actionIdentifier {
         case UNNotificationDefaultActionIdentifier:
             print("メッセージ自体をタップ")

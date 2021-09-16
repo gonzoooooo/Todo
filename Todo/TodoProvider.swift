@@ -8,11 +8,11 @@
 import Foundation
 import CoreData
 
-struct TodoProvider {
-    var persistence: PersistenceController = .shared
+public struct TodoProvider {
+    public var persistence: PersistenceController = .shared
 
-    static let shared = TodoProvider()
-    static let preview: TodoProvider = {
+    public static let shared = TodoProvider()
+    public static let preview: TodoProvider = {
         let persistence = PersistenceController.preview
 
         let viewContext = persistence.container.viewContext
@@ -39,7 +39,7 @@ struct TodoProvider {
         return .init(persistence: persistence)
     }()
 
-    func add(
+    public func add(
         id: UUID,
         name: String,
         notifiedDate: Date?,
@@ -62,7 +62,7 @@ struct TodoProvider {
         }
     }
 
-    func update(
+    public func update(
         id: UUID,
         name: String,
         isCompleted: Bool,
@@ -88,7 +88,7 @@ struct TodoProvider {
         }
     }
 
-    func updateOrder(objectIDs: [NSManagedObjectID]) throws {
+    public func updateOrder(objectIDs: [NSManagedObjectID]) throws {
         let viewContext = persistence.container.viewContext
 
 //        try viewContext.perform {
@@ -100,7 +100,7 @@ struct TodoProvider {
 //        }
     }
 
-    func delete(identifiedBy objectIDs: [NSManagedObjectID]) async throws {
+    public func delete(identifiedBy objectIDs: [NSManagedObjectID]) async throws {
         let viewContext = persistence.container.viewContext
 
         // FIXME: Should use background view context
@@ -114,7 +114,7 @@ struct TodoProvider {
         }
     }
 
-    func delete(ids: Set<UUID>) async throws {
+    public func delete(ids: Set<UUID>) async throws {
         let viewContext = persistence.container.viewContext
         
         // FIXME: Should use background view context
@@ -133,7 +133,7 @@ struct TodoProvider {
         }
     }
 
-    func maxOrder() throws -> Int64 {
+    public func maxOrder() throws -> Int64 {
         let keyPathExpression = NSExpression(forKeyPath: "order")
         let maxNumberExpression = NSExpression(forFunction: "max:", arguments: [keyPathExpression])
 
@@ -158,7 +158,7 @@ struct TodoProvider {
     }
 
     #if DEBUG
-    var samples: [Todo] {
+    public var samples: [Todo] {
         let viewContext = persistence.container.viewContext
         let request = Todo.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Todo.name, ascending: true)]

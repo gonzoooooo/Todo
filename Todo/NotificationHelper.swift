@@ -8,8 +8,8 @@
 import Foundation
 import UserNotifications
 
-extension NotificationClient {
-    func register(identifier: UUID, name: String, date: Date) {
+public extension NotificationClient {
+    public func register(identifier: UUID, name: String, date: Date) {
         let action = UNNotificationAction(identifier: "CompleteAction", title: String(localized: "Done"), options: .foreground)
         let categoryIdentifier = "todo"
         let category = UNNotificationCategory(identifier: categoryIdentifier, actions: [action], intentIdentifiers: [])

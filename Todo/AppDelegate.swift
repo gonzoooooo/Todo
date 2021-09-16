@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 import UserNotifications
 
-final class AppDelegate: UIResponder, UIApplicationDelegate {
-    func application(
+public final class AppDelegate: UIResponder, UIApplicationDelegate {
+    public func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {

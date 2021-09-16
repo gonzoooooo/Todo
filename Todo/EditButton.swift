@@ -7,12 +7,17 @@
 
 import SwiftUI
 
-struct EditButton: View {
+public struct EditButton: View {
     @Binding var editMode: EditMode
 
-    var action: () -> Void = {}
+    public var action: () -> Void
 
-    var body: some View {
+    public init(editMode: Binding<EditMode>, action: @escaping () -> Void = {}) {
+        self._editMode = editMode
+        self.action = action
+    }
+
+    public var body: some View {
         Button(role: role) {
             withAnimation {
                 if editMode == .active {

@@ -8,7 +8,7 @@
 import CoreData
 import SwiftUI
 
-struct TodoListView: View {
+public struct TodoListView: View {
     @Environment(\.managedObjectContext)
     private var viewContext
 
@@ -36,9 +36,13 @@ struct TodoListView: View {
     @State
     private var presentedConfirmationForRemoveTasks = false
 
-    var todoProvider: TodoProvider = .shared
+    var todoProvider: TodoProvider
 
-    var body: some View {
+    public init(todoProvider: TodoProvider = .shared) {
+        self.todoProvider = todoProvider
+    }
+
+    public var body: some View {
         List(selection: $selection) {
             ForEach(filteredTodos, id: \.id) { todo in
                 Button {

@@ -7,25 +7,30 @@
 
 import SwiftUI
 
-enum SelectMode {
+public enum SelectMode {
     case active
     case inactive
 
-    var isActive: Bool {
+    public var isActive: Bool {
         self == .active
     }
 
-    mutating func toggle() {
+    mutating public func toggle() {
         self = self.isActive ? .inactive : .active
     }
 }
 
-struct SelectButton: View {
+public struct SelectButton: View {
     @Binding var mode: SelectMode
 
-    var action: () -> Void = {}
+    public var action: () -> Void
 
-    var body: some View {
+    public init(mode: Binding<SelectMode>, action: @escaping () -> Void = {}) {
+        self._mode = mode
+        self.action = action
+    }
+
+    public var body: some View {
         Button {
             withAnimation {
                 mode.toggle()
