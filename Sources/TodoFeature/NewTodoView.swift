@@ -79,6 +79,7 @@ struct NewTodoView: View {
                     }
                 } label: {
                     Text("Add")
+                        .bold()
                 }
                 .disabled(isDisabledRegisterButton)
             }

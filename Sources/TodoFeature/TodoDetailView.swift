@@ -120,6 +120,7 @@ struct TodoDetailView: View {
                     }
                 } label: {
                     Text("Done")
+                        .bold()
                 }
                 .disabled(isDisabledRegisterButton)
             }
