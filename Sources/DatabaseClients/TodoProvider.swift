@@ -94,6 +94,22 @@ public struct TodoProvider {
 //        }
     }
 
+    public func completeTodo(id: UUID) async throws {
+        let viewContext = persistence.container.viewContext
+
+        try await viewContext.perform {
+            let request = Todo.fetchRequest()
+            request.fetchLimit = 1
+
+            request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
+
+            guard let todo = try? viewContext.fetch(request).first else { return }
+            todo.isCompleted = true
+
+            try viewContext.save()
+        }
+    }
+
     public func delete(identifiedBy objectIDs: [NSManagedObjectID]) async throws {
         let viewContext = persistence.container.viewContext
 

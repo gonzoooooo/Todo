@@ -1,4 +1,5 @@
 import Foundation
+import NotificationActions
 import UserNotifications
 
 public final class NotificationClient: NSObject {
@@ -41,13 +42,6 @@ extension NotificationClient: UNUserNotificationCenterDelegate {
     }
 
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-        switch response.actionIdentifier {
-        case UNNotificationDefaultActionIdentifier:
-            print("メッセージ自体をタップ")
-        case "CompleteAction":
-            print("完了ボタンをタップ")
-        default:
-            break
-        }
+        await NotificationAction(rawValue: response.actionIdentifier)?.handleNotificationAction(with: response.notification.request.content.userInfo)
     }
 }

@@ -37,11 +37,21 @@ let package = Package(
             ]
         ),
         .target(
-            name: "NotificationClient"
+            name: "NotificationActions",
+            dependencies: [
+                "DatabaseClients"
+            ]
+        ),
+        .target(
+            name: "NotificationClient",
+            dependencies: [
+                "NotificationActions"
+            ]
         ),
         .target(
             name: "NotificationHelper",
             dependencies: [
+                "NotificationActions",
                 "NotificationClient"
             ]
         ),

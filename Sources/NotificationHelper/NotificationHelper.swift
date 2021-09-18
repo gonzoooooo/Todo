@@ -1,10 +1,15 @@
 import Foundation
+import NotificationActions
 import NotificationClient
 import UserNotifications
 
 public extension NotificationClient {
     func register(identifier: UUID, name: String, date: Date) {
-        let action = UNNotificationAction(identifier: "CompleteAction", title: String(localized: "Done"), options: .foreground)
+        let action = UNNotificationAction(
+            identifier: NotificationAction.completeAction.rawValue,
+            title: String(localized: "Done"),
+            options: .foreground
+        )
         let categoryIdentifier = "todo"
         let category = UNNotificationCategory(identifier: categoryIdentifier, actions: [action], intentIdentifiers: [])
         notificationCenter.setNotificationCategories([category])
@@ -13,6 +18,7 @@ public extension NotificationClient {
         content.title = "Todo"
         content.body = name
         content.sound = .default
+        content.userInfo = ["identifier": identifier.uuidString]
         content.categoryIdentifier = categoryIdentifier
 
         let dateComponents = DateComponents(
