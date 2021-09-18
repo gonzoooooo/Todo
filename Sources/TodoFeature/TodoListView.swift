@@ -16,6 +16,9 @@ public struct TodoListView: View {
     private var isHiddenCompletedTodos = false
 
     @State
+    private var searchText = ""
+
+    @State
     private var editMode: EditMode = .inactive
 
     @State
@@ -41,7 +44,7 @@ public struct TodoListView: View {
 
     public var body: some View {
         List(selection: $selection) {
-            ForEach(filteredTodos, id: \.id) { todo in
+            ForEach(todos, id: \.id) { todo in
                 Button {
                     presentedTodo = todo
                 } label: {
@@ -110,6 +113,13 @@ public struct TodoListView: View {
             .onDelete(perform: deleteItems)
             .onMove(perform: moveItems)
         }
+        .searchable(text: $searchText)
+        .onChange(of: searchText) { _ in
+            todos.nsPredicate = searchPredicate
+        }
+        .onChange(of: isHiddenCompletedTodos) { _ in
+            todos.nsPredicate = searchPredicate
+        }
         .toolbar(content: toolbarContent)
         .environment(\.editMode, $editMode)
         .navigationTitle(navigationTitle)
@@ -152,16 +162,18 @@ public struct TodoListView: View {
         }
     }
 
-    private var filteredTodos: [FetchedResults<Todo>.Element] {
-        var array: [FetchedResults<Todo>.Element] = []
+    private var searchPredicate: NSPredicate {
+        var predicates = [NSPredicate]()
 
-        todos.forEach { todo in
-            if !isHiddenCompletedTodos || !todo.isCompleted {
-                array.append(todo)
-            }
+        if isHiddenCompletedTodos {
+            predicates.append(NSPredicate(format: "%K == false", #keyPath(Todo.isCompleted)))
         }
 
-        return array
+        if !searchText.isEmpty {
+            predicates.append(NSPredicate(format: "%K BEGINSWITH[cd] %@", #keyPath(Todo.name), searchText))
+        }
+
+        return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
     }
 
     private func moveItems(from source: IndexSet, to destination: Int) {
