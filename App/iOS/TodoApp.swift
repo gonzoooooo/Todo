@@ -9,6 +9,7 @@ import AppFeature
 import CoreDataModels
 import SwiftUI
 import TodoFeature
+import UIKit
 
 @main
 struct TodoApp: App {
@@ -20,8 +21,12 @@ struct TodoApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                TodoListView()
-                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                if UIDevice.current.userInterfaceIdiom == .pad {
+                    TodoMenuView(persistenceController: persistenceController)
+                } else {
+                    TodoListView()
+                        .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                }
             }
             .tint(.accentColor)
         }

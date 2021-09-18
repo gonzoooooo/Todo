@@ -15,6 +15,8 @@ public struct TodoListView: View {
     @State
     private var isHiddenCompletedTodos = false
 
+    private var isHiddenUnflaggedTodos: Bool
+
     @State
     private var searchText = ""
 
@@ -38,8 +40,16 @@ public struct TodoListView: View {
 
     var todoProvider: TodoProvider
 
-    public init(todoProvider: TodoProvider = .shared) {
+    private var defaultNavigationTitle: String
+
+    public init(
+        todoProvider: TodoProvider = .shared,
+        isHiddenUnflaggedTodos: Bool = false,
+        defaultNavigationTitle: String = String(localized: "Tasks")
+    ) {
         self.todoProvider = todoProvider
+        self.isHiddenUnflaggedTodos = isHiddenUnflaggedTodos
+        self.defaultNavigationTitle = defaultNavigationTitle
     }
 
     public var body: some View {
@@ -114,6 +124,12 @@ public struct TodoListView: View {
             .onMove(perform: moveItems)
         }
         .searchable(text: $searchText)
+        .refreshable {
+            todos.nsPredicate = searchPredicate
+        }
+        .onAppear {
+            todos.nsPredicate = searchPredicate
+        }
         .onChange(of: searchText) { _ in
             todos.nsPredicate = searchPredicate
         }
@@ -164,6 +180,10 @@ public struct TodoListView: View {
 
     private var searchPredicate: NSPredicate {
         var predicates = [NSPredicate]()
+
+        if isHiddenUnflaggedTodos {
+            predicates.append(NSPredicate(format: "%K == true", #keyPath(Todo.isFlagged)))
+        }
 
         if isHiddenCompletedTodos {
             predicates.append(NSPredicate(format: "%K == false", #keyPath(Todo.isCompleted)))
@@ -216,7 +236,7 @@ public struct TodoListView: View {
 
 extension TodoListView {
     var navigationTitle: Text {
-        selection.isEmpty ? Text("Tasks") : Text("\(selection.count) Selected")
+        selection.isEmpty ? Text(defaultNavigationTitle) : Text("\(selection.count) Selected")
     }
 
     @ToolbarContentBuilder
