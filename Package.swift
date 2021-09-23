@@ -6,11 +6,13 @@ import PackageDescription
 let package = Package(
     name: "TodoApp",
     platforms: [
-        .iOS(.v15)
+        .iOS(.v15),
+        .watchOS(.v8)
     ],
     products: [
         .library(name: "AppFeature", targets: ["AppFeature"]),
         .library(name: "TodoFeature", targets: ["TodoFeature"]),
+        .library(name: "WatchFeature", targets: ["WatchFeature"])
     ],
     dependencies: [],
     targets: [
@@ -65,5 +67,12 @@ let package = Package(
                 "NotificationHelper"
             ]
         ),
+        .target(
+            name: "WatchFeature",
+            dependencies: [
+                "CoreDataModels",
+                "DatabaseClients"
+            ]
+        )
     ]
 )

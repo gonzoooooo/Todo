@@ -1,6 +1,9 @@
 import Foundation
 import CoreData
 import CoreDataModels
+#if os(watchOS)
+import ClockKit
+#endif
 
 public struct TodoProvider {
     public var persistence: PersistenceController = .shared
@@ -94,7 +97,7 @@ public struct TodoProvider {
 //        }
     }
 
-    public func completeTodo(id: UUID) async throws {
+    public func changeCompleteTodo(id: UUID, isComplete: Bool) async throws {
         let viewContext = persistence.container.viewContext
 
         try await viewContext.perform {
@@ -104,10 +107,18 @@ public struct TodoProvider {
             request.predicate = NSPredicate(format: "id = %@", id as CVarArg)
 
             guard let todo = try? viewContext.fetch(request).first else { return }
-            todo.isCompleted = true
+            todo.isCompleted = isComplete
 
             try viewContext.save()
+
+            #if os(watchOS)
+            updateComplications()
+            #endif
         }
+    }
+
+    public func completeTodo(id: UUID) async throws {
+        try await changeCompleteTodo(id: id, isComplete: true)
     }
 
     public func delete(identifiedBy objectIDs: [NSManagedObjectID]) async throws {
@@ -166,6 +177,30 @@ public struct TodoProvider {
 
         return results.first?["maxNumber"] ?? Int64(0)
     }
+
+    public func numberOfTasks() -> Int {
+        let count = try? persistence.container.viewContext.count(for: Todo.fetchRequest())
+
+        return count ?? 0
+    }
+
+    public func numberOfRemainingTasks() -> Int {
+        let request = Todo.fetchRequest()
+        request.predicate = NSPredicate(format: "%K == false", #keyPath(Todo.isCompleted))
+
+        let count = try? persistence.container.viewContext.count(for: request)
+
+        return count ?? 0
+    }
+
+    #if os(watchOS)
+    private func updateComplications() {
+        let server = CLKComplicationServer.sharedInstance()
+        for complication in server.activeComplications ?? [] {
+            server.reloadTimeline(for: complication)
+        }
+    }
+    #endif
 
     #if DEBUG
     public var samples: [Todo] {
