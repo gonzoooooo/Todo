@@ -5,6 +5,7 @@ import DatabaseClients
 import NotificationHelper
 import SwiftUI
 
+@available(iOS 15, *)
 public struct TodoListView: View {
     @Environment(\.managedObjectContext)
     private var viewContext

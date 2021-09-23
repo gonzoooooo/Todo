@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15, *)
 public struct EditButton: View {
     @Binding var editMode: EditMode
 

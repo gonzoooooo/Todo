@@ -9,6 +9,7 @@
 import CoreDataModels
 import SwiftUI
 
+@available(iOS 15, *)
 public struct TodoMenuView: View {
     @State
     private var selection: Int? = 0

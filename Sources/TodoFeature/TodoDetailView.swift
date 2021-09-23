@@ -5,6 +5,7 @@ import NotificationClient
 import NotificationHelper
 import SwiftUI
 
+@available(iOS 15, *)
 struct TodoDetailView: View {
     @Environment(\.presentationMode)
     private var presentationMode

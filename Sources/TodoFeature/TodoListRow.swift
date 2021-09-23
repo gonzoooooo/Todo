@@ -2,6 +2,7 @@ import CoreDataModels
 import DatabaseClients
 import SwiftUI
 
+@available(iOS 15, *)
 struct TodoListRow: View {
     @Environment(\.editMode)
     var editMode
