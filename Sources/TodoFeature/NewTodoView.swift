@@ -24,7 +24,7 @@ struct NewTodoView: View {
     @State
     var notifiedDate: Date = Date()
 
-    let todoProvider: TodoProvider = .shared
+    var todoProvider: TodoProvider = .shared
 
     let notificationClient: NotificationClient = .shared
 
@@ -123,10 +123,12 @@ struct NewTodoView: View {
 
 struct NewTodoView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
+        let todoProvider = TodoProvider.preview
+
+        return Group {
             NavigationView {
-                NewTodoView()
-                    .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+                NewTodoView(todoProvider: todoProvider)
+                    .environment(\.managedObjectContext, todoProvider.persistence.container.viewContext)
             }
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
 
