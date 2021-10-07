@@ -29,7 +29,7 @@ let package = Package(
         .target(
             name: "CoreDataModels",
             resources: [
-              .copy("TodoApp.xcdatamodeld")
+              .process("TodoApp.xcdatamodeld")
             ]
         ),
         .target(
