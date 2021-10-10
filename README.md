@@ -28,6 +28,7 @@ This app contains features that are not practical, because they are being implem
 - Core Data
 - Local Notifications
 - async/await
+- MVVM
 
 ## License
 
