@@ -96,8 +96,8 @@ import DatabaseClients
 
 struct TodoListRow_Previews: PreviewProvider {
     static var previews: some View {
-        let todoProvider = TodoProvider.preview
-        let todos = todoProvider.samples
+        let todoClient = TodoClient.preview
+        let todos = todoClient.samples
         let todo1 = todos[0]
         let todo2 = todos[1]
 
@@ -105,7 +105,7 @@ struct TodoListRow_Previews: PreviewProvider {
             TodoListRow(
                 viewModel: .init(
                     todo: todo1,
-                    todoProvider: todoProvider,
+                    todoClient: todoClient,
                     editMode: .inactive
                 )
             )
@@ -115,7 +115,7 @@ struct TodoListRow_Previews: PreviewProvider {
             TodoListRow(
                 viewModel: .init(
                     todo: todo2,
-                    todoProvider: todoProvider,
+                    todoClient: todoClient,
                     editMode: .inactive
                 )
             )
@@ -126,7 +126,7 @@ struct TodoListRow_Previews: PreviewProvider {
             TodoListRow(
                 viewModel: .init(
                     todo: todo1,
-                    todoProvider: todoProvider,
+                    todoClient: todoClient,
                     editMode: .inactive
                 )
             )
@@ -137,7 +137,7 @@ struct TodoListRow_Previews: PreviewProvider {
             TodoListRow(
                 viewModel: .init(
                     todo: todo2,
-                    todoProvider: todoProvider,
+                    todoClient: todoClient,
                     editMode: .inactive
                 )
             )

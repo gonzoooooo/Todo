@@ -52,9 +52,9 @@ import NotificationClient
 
 struct TodoMenuView_Previews: PreviewProvider {
    static var previews: some View {
-       let todoProvider = TodoProvider.preview
+       let todoClient = TodoClient.preview
        let notificationClient = NotificationClient.shared
-       let viewModel = TodoMenuViewModel(todoProvider: todoProvider, notificationClient: notificationClient)
+       let viewModel = TodoMenuViewModel(todoClient: todoClient, notificationClient: notificationClient)
 
        Group {
            NavigationView {

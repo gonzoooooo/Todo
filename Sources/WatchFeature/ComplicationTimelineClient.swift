@@ -4,13 +4,13 @@ import DatabaseClients
 import SwiftUI
 
 public final class ComplicationTimelineClient {
-    private var todoProvider: TodoProvider
+    private var todoClient: TodoClient
 
-    public static let shared = ComplicationTimelineClient(todoProvider: .shared)
-    public static let preview = ComplicationTimelineClient(todoProvider: .preview)
+    public static let shared = ComplicationTimelineClient(todoClient: .shared)
+    public static let preview = ComplicationTimelineClient(todoClient: .preview)
 
-    private init(todoProvider: TodoProvider) {
-        self.todoProvider = todoProvider
+    private init(todoClient: TodoClient) {
+        self.todoClient = todoClient
     }
 
     public func timeline(from family: CLKComplicationFamily) -> CLKComplicationTemplate? {
@@ -40,7 +40,7 @@ public final class ComplicationTimelineClient {
 
     private var circularSmallComplicationTemplate: CLKComplicationTemplate {
         let line1TextProvider = CLKSimpleTextProvider(text: "Tasks")
-        let numberOfTasks = todoProvider.numberOfRemainingTasks()
+        let numberOfTasks = todoClient.numberOfRemainingTasks()
         let line2TextProvider = CLKSimpleTextProvider(text: "\(numberOfTasks.formatted())")
 
         return CLKComplicationTemplateCircularSmallStackText(
@@ -80,7 +80,7 @@ public final class ComplicationTimelineClient {
     }
 
     private var graphicCircularComplicationTemplate: CLKComplicationTemplate {
-        let numberOfTasks = todoProvider.numberOfRemainingTasks()
+        let numberOfTasks = todoClient.numberOfRemainingTasks()
 
         let centerTextProvider = CLKSimpleTextProvider(text: "\(numberOfTasks.formatted())")
         centerTextProvider.tintColor = .white
@@ -93,14 +93,14 @@ public final class ComplicationTimelineClient {
 
     private var graphicRectangularComplicationTemplate: CLKComplicationTemplate {
         return CLKComplicationTemplateGraphicRectangularFullView(
-            GraphicRectangularFullView(todoProvider: todoProvider)
-                .environment(\.managedObjectContext, todoProvider.persistence.container.viewContext)
+            GraphicRectangularFullView(todoClient: todoClient)
+                .environment(\.managedObjectContext, todoClient.persistence.container.viewContext)
         )
     }
 
     private var modularSmallComplicationTemplate: CLKComplicationTemplate {
         let line1TextProvider = CLKSimpleTextProvider(text: "Tasks")
-        let numberOfTasks = todoProvider.numberOfRemainingTasks()
+        let numberOfTasks = todoClient.numberOfRemainingTasks()
         let line2TextProvider = CLKSimpleTextProvider(text: "\(numberOfTasks.formatted())")
 
         return CLKComplicationTemplateModularSmallStackText(
@@ -120,7 +120,7 @@ public final class ComplicationTimelineClient {
     }
 
     private var utiltarianSmallComplicationTemplate: CLKComplicationTemplate {
-        let numberOfTasks = todoProvider.numberOfRemainingTasks()
+        let numberOfTasks = todoClient.numberOfRemainingTasks()
         let textProvider = CLKSimpleTextProvider(text: "Remaining: \(numberOfTasks.formatted())")
         return CLKComplicationTemplateUtilitarianLargeFlat(textProvider: textProvider)
     }
@@ -132,7 +132,7 @@ public final class ComplicationTimelineClient {
     }
 
     private var numberOfRemainingTasksString: String {
-        let numberOfTasks = todoProvider.numberOfRemainingTasks()
+        let numberOfTasks = todoClient.numberOfRemainingTasks()
 
         switch numberOfTasks {
         case 0:

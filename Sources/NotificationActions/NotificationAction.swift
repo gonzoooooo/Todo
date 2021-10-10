@@ -18,7 +18,7 @@ extension NotificationAction {
         guard let uuidString = userInfo["identifier"] as? String, let id = UUID(uuidString: uuidString) else { return }
 
         do {
-            try await TodoProvider.shared.completeTodo(id: id)
+            try await TodoClient.shared.completeTodo(id: id)
         } catch {
             print("error: \(error)")
         }

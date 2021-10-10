@@ -6,16 +6,16 @@ public final class WatchTodoListViewModel: ObservableObject {
     @Published
     private(set) var todos: [Todo] = []
 
-    private let todoProvider: TodoProvider
+    private let todoClient: TodoClient
 
-    public init(todoProvider: TodoProvider) {
-        self.todoProvider = todoProvider
+    public init(todoClient: TodoClient) {
+        self.todoClient = todoClient
 
         fetch()
     }
 
     func fetch() {
-        todos = todoProvider.fetch(
+        todos = todoClient.fetch(
             predicate: nil,
             sortDescriptors: [NSSortDescriptor(keyPath: \Todo.order, ascending: true)]
         )
@@ -27,7 +27,7 @@ public final class WatchTodoListViewModel: ObservableObject {
     func todoListRowViewModel(todo: Todo) -> WatchTodoListRowViewModel {
         WatchTodoListRowViewModel(todo: todo) { todo in
             Task {
-                try? await self.todoProvider.changeCompleteTodo(id: todo.id, isComplete: !todo.isCompleted)
+                try? await self.todoClient.changeCompleteTodo(id: todo.id, isComplete: !todo.isCompleted)
 
                 self.fetch()
             }

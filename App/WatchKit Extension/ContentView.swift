@@ -11,10 +11,10 @@ import SwiftUI
 import WatchFeature
 
 struct ContentView: View {
-    let todoProvider = TodoProvider.shared
+    let todoClient = TodoClient.shared
 
     var body: some View {
-        WatchTodoListView(viewModel: .init(todoProvider: todoProvider))
+        WatchTodoListView(viewModel: .init(todoClient: todoClient))
     }
 }
 

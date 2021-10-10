@@ -5,11 +5,11 @@ import CoreDataModels
 import ClockKit
 #endif
 
-public struct TodoProvider {
+public struct TodoClient {
     public var persistence: PersistenceController = .shared
 
-    public static let shared = TodoProvider()
-    public static let preview: TodoProvider = {
+    public static let shared = TodoClient()
+    public static let preview: TodoClient = {
         let persistence = PersistenceController.preview
 
         let viewContext = persistence.container.viewContext

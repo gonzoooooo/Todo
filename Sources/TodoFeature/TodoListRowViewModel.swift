@@ -31,16 +31,16 @@ final class TodoListRowViewModel: ObservableObject {
     }
 
     private let todo: Todo
-    private let todoProvider: TodoProvider
+    private let todoClient: TodoClient
 
-    init(todo: Todo, todoProvider: TodoProvider, editMode: EditMode) {
+    init(todo: Todo, todoClient: TodoClient, editMode: EditMode) {
         self.todo = todo
-        self.todoProvider = todoProvider
+        self.todoClient = todoClient
         self.editMode = editMode
     }
 
     func check() async throws {
-        try await todoProvider.update(
+        try await todoClient.update(
             id: todo.id,
             name: todo.name,
             isCompleted: !todo.isCompleted,
@@ -50,7 +50,7 @@ final class TodoListRowViewModel: ObservableObject {
     }
 
     func toggleFlag() async throws {
-        try await todoProvider.update(
+        try await todoClient.update(
             id: todo.id,
             name: todo.name,
             isCompleted: todo.isCompleted,

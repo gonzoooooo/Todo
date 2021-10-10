@@ -38,7 +38,7 @@ public final class TodoListViewModel: NSObject, ObservableObject {
 
     private(set) var defaultNavigationTitle: String
 
-    private let todoProvider: TodoProvider
+    private let todoClient: TodoClient
     private let notificationClient: NotificationClient
 
     var navigationTitle: Text {
@@ -46,16 +46,16 @@ public final class TodoListViewModel: NSObject, ObservableObject {
     }
 
     var newTodoViewModel: NewTodoViewModel {
-        .init(todoProvider: todoProvider, notificationClient: notificationClient)
+        .init(todoClient: todoClient, notificationClient: notificationClient)
     }
 
     public init(
-        todoProvider: TodoProvider,
+        todoClient: TodoClient,
         notificationClient: NotificationClient,
         isHiddenUnflaggedTodos: Bool = false,
         defaultNavigationTitle: String = String(localized: "Tasks")
     ) {
-        self.todoProvider = todoProvider
+        self.todoClient = todoClient
         self.notificationClient = notificationClient
         self.isHiddenUnflaggedTodos = isHiddenUnflaggedTodos
         self.defaultNavigationTitle = defaultNavigationTitle
@@ -80,7 +80,7 @@ public final class TodoListViewModel: NSObject, ObservableObject {
     }
 
     func fetch() {
-        todos = todoProvider.fetch(
+        todos = todoClient.fetch(
             predicate: searchPredicate,
             sortDescriptors: [NSSortDescriptor(keyPath: \Todo.order, ascending: true)]
         )
@@ -91,7 +91,7 @@ public final class TodoListViewModel: NSObject, ObservableObject {
         notifiedDate: Date?,
         isFlagged: Bool
     ) async throws {
-        try? await todoProvider.add(
+        try? await todoClient.add(
             id: UUID(),
             name: name,
             notifiedDate: notifiedDate,
@@ -104,24 +104,24 @@ public final class TodoListViewModel: NSObject, ObservableObject {
         objectIDs.move(fromOffsets: source, toOffset: destination)
 
         do {
-            try todoProvider.updateOrder(objectIDs: objectIDs)
+            try todoClient.updateOrder(objectIDs: objectIDs)
         } catch {
             print("error: \(error)")
         }
     }
 
     func deleteTodos(offsets: IndexSet) async throws {
-        try await todoProvider.delete(identifiedBy: offsets.map { todos[$0].objectID })
+        try await todoClient.delete(identifiedBy: offsets.map { todos[$0].objectID })
     }
 
     func deleteTodos(ids: Set<UUID>) async throws {
-        try await todoProvider.delete(ids: ids)
+        try await todoClient.delete(ids: ids)
     }
 
     func todoListRowViewModel(todo: Todo) -> TodoListRowViewModel {
         TodoListRowViewModel(
             todo: todo,
-            todoProvider: todoProvider,
+            todoClient: todoClient,
             editMode: editMode
         )
     }
@@ -129,7 +129,7 @@ public final class TodoListViewModel: NSObject, ObservableObject {
     func todoDetailViewModel(todo: Todo) -> TodoDetailViewModel {
         TodoDetailViewModel(
             todo: todo,
-            todoProvider: todoProvider,
+            todoClient: todoClient,
             notificationClient: notificationClient
         )
     }

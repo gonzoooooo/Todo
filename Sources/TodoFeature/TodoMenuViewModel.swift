@@ -8,17 +8,17 @@ public enum TodoMenuButtonType {
 }
 
 public final class TodoMenuViewModel: ObservableObject {
-    private let todoProvider: TodoProvider
+    private let todoClient: TodoClient
     private let notificationClient: NotificationClient
 
-    public init(todoProvider: TodoProvider, notificationClient: NotificationClient) {
-        self.todoProvider = todoProvider
+    public init(todoClient: TodoClient, notificationClient: NotificationClient) {
+        self.todoClient = todoClient
         self.notificationClient = notificationClient
     }
 
     func todoListViewModel(buttonType: TodoMenuButtonType) -> TodoListViewModel {
         return .init(
-            todoProvider: todoProvider,
+            todoClient: todoClient,
             notificationClient: notificationClient,
             defaultNavigationTitle: navigationTitle(buttonType: buttonType)
         )

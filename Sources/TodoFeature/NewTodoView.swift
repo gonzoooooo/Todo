@@ -85,28 +85,28 @@ import NotificationClient
 
 struct NewTodoView_Previews: PreviewProvider {
     static var previews: some View {
-        let todoProvider = TodoProvider.preview
+        let todoClient = TodoClient.preview
         let notificationClient = NotificationClient.shared
 
         return Group {
             NavigationView {
-                NewTodoView(viewModel: .init(todoProvider: todoProvider, notificationClient: notificationClient))
+                NewTodoView(viewModel: .init(todoClient: todoClient, notificationClient: notificationClient))
             }
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
 
             NavigationView {
-                NewTodoView(viewModel: .init(todoProvider: todoProvider, notificationClient: notificationClient))
+                NewTodoView(viewModel: .init(todoClient: todoClient, notificationClient: notificationClient))
             }
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
 
             NavigationView {
-                NewTodoView(viewModel: .init(todoProvider: todoProvider, notificationClient: notificationClient))
+                NewTodoView(viewModel: .init(todoClient: todoClient, notificationClient: notificationClient))
             }
             .environment(\.locale, Locale(identifier: "ja-JP"))
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
 
             NavigationView {
-                NewTodoView(viewModel: .init(todoProvider: todoProvider, notificationClient: notificationClient))
+                NewTodoView(viewModel: .init(todoClient: todoClient, notificationClient: notificationClient))
             }
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro Max"))
         }

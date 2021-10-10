@@ -14,10 +14,10 @@ public struct GraphicRectangularFullView: View {
         return NSPredicate(format: "%K == false", #keyPath(Todo.isCompleted))
     }
 
-    private var todoProvider: TodoProvider
+    private var todoClient: TodoClient
 
-    public init(todoProvider: TodoProvider = .shared) {
-        self.todoProvider = todoProvider
+    public init(todoClient: TodoClient = .shared) {
+        self.todoClient = todoClient
     }
 
     public var body: some View {
@@ -52,10 +52,10 @@ public struct GraphicRectangularFullView: View {
 
 struct GraphicRectangularFullView_Previews: PreviewProvider {
     static var previews: some View {
-        let todoProvider = TodoProvider.preview
+        let todoClient = TodoClient.preview
 
-        return GraphicRectangularFullView(todoProvider: todoProvider)
-            .environment(\.managedObjectContext, todoProvider.persistence.container.viewContext)
+        return GraphicRectangularFullView(todoClient: todoClient)
+            .environment(\.managedObjectContext, todoClient.persistence.container.viewContext)
     }
 }
 #endif

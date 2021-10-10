@@ -20,11 +20,11 @@ final class NewTodoViewModel: ObservableObject {
         return name.isEmpty
     }
 
-    private let todoProvider: TodoProvider
+    private let todoClient: TodoClient
     private let notificationClient: NotificationClient
 
-    init(todoProvider: TodoProvider, notificationClient: NotificationClient) {
-        self.todoProvider = todoProvider
+    init(todoClient: TodoClient, notificationClient: NotificationClient) {
+        self.todoClient = todoClient
         self.notificationClient = notificationClient
     }
 
@@ -32,7 +32,7 @@ final class NewTodoViewModel: ObservableObject {
         do {
             let id = UUID()
 
-            try await todoProvider.add(
+            try await todoClient.add(
                 id: id,
                 name: name,
                 notifiedDate: isNotified ? notifiedDate : nil,

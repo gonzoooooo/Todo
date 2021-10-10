@@ -190,14 +190,14 @@ import NotificationClient
 
 struct TodoListView_Previews: PreviewProvider {
     static var previews: some View {
-        let todoProvider = TodoProvider.preview
+        let todoClient = TodoClient.preview
         let notificationClient = NotificationClient.shared
 
         return Group {
             NavigationView {
                 TodoListView(
                     viewModel: .init(
-                        todoProvider: todoProvider, notificationClient: notificationClient
+                        todoClient: todoClient, notificationClient: notificationClient
                     )
                 )
             }
@@ -207,7 +207,7 @@ struct TodoListView_Previews: PreviewProvider {
             NavigationView {
                 TodoListView(
                     viewModel: .init(
-                        todoProvider: todoProvider, notificationClient: notificationClient
+                        todoClient: todoClient, notificationClient: notificationClient
                     )
                 )
                 .preferredColorScheme(.dark)
@@ -219,7 +219,7 @@ struct TodoListView_Previews: PreviewProvider {
             NavigationView {
                 TodoListView(
                     viewModel: .init(
-                        todoProvider: todoProvider, notificationClient: notificationClient
+                        todoClient: todoClient, notificationClient: notificationClient
                     )
                 )
             }

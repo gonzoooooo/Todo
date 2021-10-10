@@ -18,7 +18,7 @@ struct TodoApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self)
     var appDelegate
 
-    let todoProvider = TodoProvider.shared
+    let todoClient = TodoClient.shared
     let notificationClient = NotificationClient.shared
 
     var body: some Scene {
@@ -27,14 +27,14 @@ struct TodoApp: App {
                 if UIDevice.current.userInterfaceIdiom == .pad {
                     TodoMenuView(
                         viewModel: .init(
-                            todoProvider: todoProvider,
+                            todoClient: todoClient,
                             notificationClient: notificationClient
                         )
                     )
                 } else {
                     TodoListView(
                         viewModel: .init(
-                            todoProvider: todoProvider,
+                            todoClient: todoClient,
                             notificationClient: notificationClient
                         )
                     )

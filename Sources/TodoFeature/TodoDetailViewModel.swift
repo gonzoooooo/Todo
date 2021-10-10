@@ -24,7 +24,7 @@ final class TodoDetailViewModel: ObservableObject {
     var presentedConfirmationForRemoveTask = false
 
     private let todo: Todo
-    private let todoProvider: TodoProvider
+    private let todoClient: TodoClient
     private let notificationClient: NotificationClient
 
     var isDisabledRegisterButton: Bool {
@@ -33,11 +33,11 @@ final class TodoDetailViewModel: ObservableObject {
 
     init(
         todo: Todo,
-        todoProvider: TodoProvider,
+        todoClient: TodoClient,
         notificationClient: NotificationClient
     ) {
         self.todo = todo
-        self.todoProvider = todoProvider
+        self.todoClient = todoClient
         self.notificationClient = notificationClient
 
         self.name = todo.name
@@ -49,7 +49,7 @@ final class TodoDetailViewModel: ObservableObject {
     }
 
     func update() async throws {
-        try await todoProvider.update(
+        try await todoClient.update(
             id: todo.id,
             name: name,
             isCompleted: isCompleted,
@@ -69,6 +69,6 @@ final class TodoDetailViewModel: ObservableObject {
     }
 
     func delete() async {
-        try? await todoProvider.delete(ids: [todo.id])
+        try? await todoClient.delete(ids: [todo.id])
     }
 }

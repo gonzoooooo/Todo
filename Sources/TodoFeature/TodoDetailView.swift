@@ -119,16 +119,16 @@ import NotificationClient
 
 struct TodoDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        let todoProvider = TodoProvider.preview
+        let todoClient = TodoClient.preview
         let notificationClient = NotificationClient.shared
-        let todo = TodoProvider.preview.samples.first!
+        let todo = TodoClient.preview.samples.first!
 
         return Group {
             NavigationView {
                 TodoDetailView(
                     viewModel: .init(
                         todo: todo,
-                        todoProvider: todoProvider,
+                        todoClient: todoClient,
                         notificationClient: notificationClient
                     )
                 )
@@ -140,7 +140,7 @@ struct TodoDetailView_Previews: PreviewProvider {
                 TodoDetailView(
                     viewModel: .init(
                         todo: todo,
-                        todoProvider: todoProvider,
+                        todoClient: todoClient,
                         notificationClient: notificationClient
                     )
                 )
@@ -153,7 +153,7 @@ struct TodoDetailView_Previews: PreviewProvider {
                 TodoDetailView(
                     viewModel: .init(
                         todo: todo,
-                        todoProvider: todoProvider,
+                        todoClient: todoClient,
                         notificationClient: notificationClient
                     )
                 )
