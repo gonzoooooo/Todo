@@ -14,8 +14,7 @@ struct ContentView: View {
     let todoProvider = TodoProvider.shared
 
     var body: some View {
-        WatchTodoListView(todoProvider: todoProvider)
-            .environment(\.managedObjectContext, todoProvider.persistence.container.viewContext)
+        WatchTodoListView(viewModel: .init(todoProvider: todoProvider))
     }
 }
 

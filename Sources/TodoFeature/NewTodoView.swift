@@ -1,7 +1,4 @@
 import CoreDataModels
-import DatabaseClients
-import NotificationClient
-import NotificationHelper
 import SwiftUI
 
 @available(iOS 15, *)
@@ -9,39 +6,23 @@ struct NewTodoView: View {
     @Environment(\.presentationMode)
     private var presentationMode
 
-    @Environment(\.managedObjectContext)
-    private var viewContext
+    @ObservedObject
+    var viewModel: NewTodoViewModel
 
-    @State
-    var name = ""
-
-    @State
-    var isFlagged = false
-
-    @State
-    var isNotified = false
-
-    @State
-    var notifiedDate: Date = Date()
-
-    var todoProvider: TodoProvider = .shared
-
-    let notificationClient: NotificationClient = .shared
-
-    private var isDisabledRegisterButton: Bool {
-        return name.isEmpty
+    init(viewModel: NewTodoViewModel) {
+        self.viewModel = viewModel
     }
 
     var body: some View {
         List {
             Section {
-                TextField("Task Name", text: $name, prompt: Text("Task Name"))
+                TextField("Task Name", text: $viewModel.name, prompt: Text("Task Name"))
             }
 
             Section {
-                Toggle("Notification", isOn: $isNotified.animation())
+                Toggle("Notification", isOn: $viewModel.isNotified.animation())
 
-                if isNotified {
+                if viewModel.isNotified {
                     HStack(spacing: 0) {
 //                        Text("日時")
 
@@ -51,13 +32,13 @@ struct NewTodoView: View {
 
                         DatePicker(
                             "",
-                            selection: $notifiedDate,
+                            selection: $viewModel.notifiedDate,
                             displayedComponents: .date
                         )
 
                         DatePicker(
                             "",
-                            selection: $notifiedDate,
+                            selection: $viewModel.notifiedDate,
                             displayedComponents: .hourAndMinute
                         )
                     }
@@ -65,7 +46,7 @@ struct NewTodoView: View {
             }
 
             Section {
-                Toggle(isOn: $isFlagged) {
+                Toggle(isOn: $viewModel.isFlagged) {
                     Text("Flag")
                 }
             }
@@ -76,13 +57,14 @@ struct NewTodoView: View {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button {
                     Task {
-                        await register()
+                        await viewModel.register()
+                        presentationMode.wrappedValue.dismiss()
                     }
                 } label: {
                     Text("Add")
                         .bold()
                 }
-                .disabled(isDisabledRegisterButton)
+                .disabled(viewModel.isDisabledRegisterButton)
             }
 
             ToolbarItemGroup(placement: .navigationBarLeading) {
@@ -94,61 +76,41 @@ struct NewTodoView: View {
             }
         }
     }
-
-    private func register() async {
-        do {
-            let id = UUID()
-
-            try await todoProvider.add(
-                id: id,
-                name: name,
-                notifiedDate: isNotified ? notifiedDate : nil,
-                isFlagged: isFlagged
-            )
-
-            if isNotified {
-                notificationClient.register(
-                    identifier: id,
-                    name: name,
-                    date: notifiedDate
-                )
-            }
-
-            presentationMode.wrappedValue.dismiss()
-        } catch {
-            print("Error: \(error)")
-        }
-    }
 }
+
+#if DEBUG
+
+import DatabaseClients
+import NotificationClient
 
 struct NewTodoView_Previews: PreviewProvider {
     static var previews: some View {
         let todoProvider = TodoProvider.preview
+        let notificationClient = NotificationClient.shared
 
         return Group {
             NavigationView {
-                NewTodoView(todoProvider: todoProvider)
-                    .environment(\.managedObjectContext, todoProvider.persistence.container.viewContext)
+                NewTodoView(viewModel: .init(todoProvider: todoProvider, notificationClient: notificationClient))
             }
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
 
             NavigationView {
-                NewTodoView(name: "Study SwiftUI", isNotified: true, notifiedDate: Date())
-                    .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+                NewTodoView(viewModel: .init(todoProvider: todoProvider, notificationClient: notificationClient))
             }
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
 
             NavigationView {
-                NewTodoView()
+                NewTodoView(viewModel: .init(todoProvider: todoProvider, notificationClient: notificationClient))
             }
             .environment(\.locale, Locale(identifier: "ja-JP"))
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
 
             NavigationView {
-                NewTodoView(name: "Study SwiftUI", isNotified: true, notifiedDate: Date())
-                    .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+                NewTodoView(viewModel: .init(todoProvider: todoProvider, notificationClient: notificationClient))
             }
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro Max"))
         }
     }
 }
+
+#endif

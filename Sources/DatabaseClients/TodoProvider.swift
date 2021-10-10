@@ -36,6 +36,16 @@ public struct TodoProvider {
         return .init(persistence: persistence)
     }()
 
+    public func fetch(predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]) -> [Todo] {
+        let request = Todo.fetchRequest()
+        request.predicate = predicate
+        request.sortDescriptors = sortDescriptors
+
+        let todos = try? persistence.container.viewContext.fetch(request)
+
+        return todos ?? []
+    }
+
     public func add(
         id: UUID,
         name: String,

@@ -1,54 +1,62 @@
 import CoreDataModels
-import DatabaseClients
 import SwiftUI
 
 @available(iOS 15, *)
 struct TodoListRow: View {
-    @Environment(\.editMode)
-    var editMode
-
     @ObservedObject
-    var todo: Todo
+    private var viewModel: TodoListRowViewModel
 
-    var checkTapAction: () -> Void = {}
-    var flagTapAction: () -> Void
+    init(viewModel: TodoListRowViewModel) {
+        self.viewModel = viewModel
+    }
 
     private var foregroundColorForName: Color {
-        todo.isCompleted ? .secondary : .primary
+        viewModel.isCompleted ? .secondary : .primary
     }
 
     var body: some View {
         HStack {
-            Button(action: checkTapAction) {
-                if todo.isCompleted {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.title2)
-                } else {
-                    Image(systemName: "circle")
-                        .font(.title2)
+            if viewModel.editMode == .inactive {
+                Button {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+
+                    Task {
+                        do {
+                            try await viewModel.check()
+                        } catch {
+                            print("error: \(error)")
+                        }
+                    }
+                } label: {
+                    if viewModel.isCompleted {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.title2)
+                    } else {
+                        Image(systemName: "circle")
+                            .font(.title2)
+                    }
                 }
             }
-            .disabled(editMode?.wrappedValue == .active)
 
             VStack(alignment: .leading) {
-                Text(todo.name)
+                Text(viewModel.name)
                     .foregroundColor(foregroundColorForName)
                     .padding(.top, 8)
                     .padding(.bottom, 4)
 
-                if let notifiedDate = todo.notifiedDate {
+                if let notifiedDateString = viewModel.notificationDateString {
                     HStack {
                         Image(systemName: "clock")
                             .font(.caption)
                             .foregroundColor(.systemRed)
-                        Text(dateString(from: notifiedDate))
+                        Text(notifiedDateString)
                             .font(.caption)
                             .foregroundColor(.systemRed)
                     }
                     .padding(.bottom, 4)
                 }
 
-                Text("Order: \(todo.order)")
+                Text("Order: \(viewModel.order)")
                     .font(.caption)
                     .foregroundColor(.secondary)
 
@@ -58,9 +66,15 @@ struct TodoListRow: View {
             Spacer()
 
             Button {
-                flagTapAction()
+                Task {
+                    do {
+                        try await viewModel.toggleFlag()
+                    } catch {
+                        print("error: \(error)")
+                    }
+                }
             } label: {
-                if todo.isFlagged {
+                if viewModel.isFlagged {
                     Image(systemName: "flag.circle.fill")
                         .foregroundColor(.orange)
                         .font(.title2)
@@ -72,44 +86,66 @@ struct TodoListRow: View {
             }
         }
         .frame(minHeight: 60)
-    }
-
-    private func dateString(from date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = .current
-        dateFormatter.timeZone = .current
-        dateFormatter.dateStyle = .short
-        dateFormatter.timeStyle = .short
-
-        return dateFormatter.string(from: date)
+        .environment(\.editMode, $viewModel.editMode)
     }
 }
 
+#if DEBUG
+
+import DatabaseClients
+
 struct TodoListRow_Previews: PreviewProvider {
     static var previews: some View {
-        let todos = TodoProvider.preview.samples
+        let todoProvider = TodoProvider.preview
+        let todos = todoProvider.samples
         let todo1 = todos[0]
         let todo2 = todos[1]
 
         return Group {
-            TodoListRow(todo: todo1, flagTapAction: {})
-                .previewLayout(.fixed(width: 300, height: 100))
-                .padding(12)
+            TodoListRow(
+                viewModel: .init(
+                    todo: todo1,
+                    todoProvider: todoProvider,
+                    editMode: .inactive
+                )
+            )
+            .previewLayout(.fixed(width: 300, height: 100))
+            .padding(12)
 
-            TodoListRow(todo: todo2, flagTapAction: {})
-                .environment(\.locale, Locale(identifier: "ja-JP"))
-                .previewLayout(.fixed(width: 300, height: 100))
-                .padding(12)
+            TodoListRow(
+                viewModel: .init(
+                    todo: todo2,
+                    todoProvider: todoProvider,
+                    editMode: .inactive
+                )
+            )
+            .environment(\.locale, Locale(identifier: "ja-JP"))
+            .previewLayout(.fixed(width: 300, height: 100))
+            .padding(12)
 
-            TodoListRow(todo: todo1, flagTapAction: {})
-                .preferredColorScheme(.dark)
-                .previewLayout(.fixed(width: 300, height: 100))
-                .padding(12)
+            TodoListRow(
+                viewModel: .init(
+                    todo: todo1,
+                    todoProvider: todoProvider,
+                    editMode: .inactive
+                )
+            )
+            .preferredColorScheme(.dark)
+            .previewLayout(.fixed(width: 300, height: 100))
+            .padding(12)
 
-            TodoListRow(todo: todo2, flagTapAction: {})
-                .preferredColorScheme(.dark)
-                .previewLayout(.fixed(width: 300, height: 100))
-                .padding(12)
+            TodoListRow(
+                viewModel: .init(
+                    todo: todo2,
+                    todoProvider: todoProvider,
+                    editMode: .inactive
+                )
+            )
+            .preferredColorScheme(.dark)
+            .previewLayout(.fixed(width: 300, height: 100))
+            .padding(12)
         }
     }
 }
+
+#endif

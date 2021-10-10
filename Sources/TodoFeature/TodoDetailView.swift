@@ -1,8 +1,4 @@
-import CoreData
 import CoreDataModels
-import DatabaseClients
-import NotificationClient
-import NotificationHelper
 import SwiftUI
 
 @available(iOS 15, *)
@@ -10,46 +6,23 @@ struct TodoDetailView: View {
     @Environment(\.presentationMode)
     private var presentationMode
 
-    var id: UUID
+    @ObservedObject
+    private var viewModel: TodoDetailViewModel
 
-    @State
-    var name: String
-
-    @State
-    var isCompleted: Bool
-
-    @State
-    var isNotified: Bool
-
-    @State
-    var notifiedDate: Date
-
-    @State
-    var isFlagged: Bool
-
-    @State
-    private var presentedConfirmationForRemoveTask = false
-
-    var todoProvider: TodoProvider = .shared
-
-    let notificationClient: NotificationClient = .shared
-
-    var deleteTaskAction: (_ id: UUID) -> Void = { _ in }
-
-    private var isDisabledRegisterButton: Bool {
-        return name.isEmpty
+    init(viewModel: TodoDetailViewModel) {
+        self.viewModel = viewModel
     }
 
     var body: some View {
         List {
             Section {
-                TextField("Task Name", text: $name, prompt: Text("Task Name"))
+                TextField("Task Name", text: $viewModel.name, prompt: Text("Task Name"))
             }
 
             Section {
-                Toggle("Notification", isOn: $isNotified.animation())
+                Toggle("Notification", isOn: $viewModel.isNotified.animation())
 
-                if isNotified {
+                if viewModel.isNotified {
                     HStack(spacing: 0) {
                         // FIXME: DatePicker が右端に配置されないためのワークアラウンド
                         Spacer()
@@ -57,13 +30,13 @@ struct TodoDetailView: View {
 
                         DatePicker(
                             "",
-                            selection: $notifiedDate,
+                            selection: $viewModel.notifiedDate,
                             displayedComponents: .date
                         )
 
                         DatePicker(
                             "",
-                            selection: $notifiedDate,
+                            selection: $viewModel.notifiedDate,
                             displayedComponents: .hourAndMinute
                         )
                     }
@@ -72,7 +45,7 @@ struct TodoDetailView: View {
 
             Section {
                 HStack {
-                    Toggle(isOn: $isFlagged) {
+                    Toggle(isOn: $viewModel.isFlagged) {
                         Text("Flag")
                     }
                 }
@@ -80,7 +53,7 @@ struct TodoDetailView: View {
 
             Section {
                 Button(role: .destructive) {
-                    presentedConfirmationForRemoveTask.toggle()
+                    viewModel.presentedConfirmationForRemoveTask.toggle()
                 } label: {
                     Text("Remove Task")
                         .foregroundColor(.systemRed)
@@ -89,16 +62,18 @@ struct TodoDetailView: View {
         }
         .confirmationDialog(
             Text("Remove Task"),
-            isPresented: $presentedConfirmationForRemoveTask
+            isPresented: $viewModel.presentedConfirmationForRemoveTask
         ) {
             Button(role: .destructive) {
-                deleteTaskAction(id)
-                presentationMode.wrappedValue.dismiss()
+                Task {
+                    await viewModel.delete()
+                    presentationMode.wrappedValue.dismiss()
+                }
             } label: {
                 Text("Remove task")
             }
             Button(role: .cancel) {
-                presentedConfirmationForRemoveTask = false
+                viewModel.presentedConfirmationForRemoveTask = false
             } label: {
                 Text("Cancel")
             }
@@ -112,7 +87,7 @@ struct TodoDetailView: View {
                 Button {
                     Task {
                         do {
-                            try await update()
+                            try await viewModel.update()
                         } catch {
                             print("error: \(error)")
                         }
@@ -123,7 +98,7 @@ struct TodoDetailView: View {
                     Text("Done")
                         .bold()
                 }
-                .disabled(isDisabledRegisterButton)
+                .disabled(viewModel.isDisabledRegisterButton)
             }
 
             ToolbarItemGroup(placement: .navigationBarLeading) {
@@ -135,37 +110,27 @@ struct TodoDetailView: View {
             }
         }
     }
-
-    private func update() async throws {
-        try await todoProvider.update(
-            id: id,
-            name: name,
-            isCompleted: isCompleted,
-            notifiedDate: isNotified ? notifiedDate : nil,
-            isFlagged: isFlagged
-        )
-
-        notificationClient.cancel(id: id.uuidString)
-
-        if isNotified {
-            notificationClient.register(identifier: id, name: name, date: notifiedDate)
-        }
-    }
 }
+
+#if DEBUG
+
+import DatabaseClients
+import NotificationClient
 
 struct TodoDetailView_Previews: PreviewProvider {
     static var previews: some View {
+        let todoProvider = TodoProvider.preview
+        let notificationClient = NotificationClient.shared
         let todo = TodoProvider.preview.samples.first!
 
         return Group {
             NavigationView {
                 TodoDetailView(
-                    id: todo.id,
-                    name: todo.name,
-                    isCompleted: todo.isCompleted,
-                    isNotified: true,
-                    notifiedDate: Date(),
-                    isFlagged: todo.isFlagged
+                    viewModel: .init(
+                        todo: todo,
+                        todoProvider: todoProvider,
+                        notificationClient: notificationClient
+                    )
                 )
             }
             .previewDevice(PreviewDevice(rawValue: "iPhone 12 Mini"))
@@ -173,12 +138,11 @@ struct TodoDetailView_Previews: PreviewProvider {
 
              NavigationView {
                 TodoDetailView(
-                    id: todo.id,
-                    name: "",
-                    isCompleted: todo.isCompleted,
-                    isNotified: true,
-                    notifiedDate: Date(),
-                    isFlagged: todo.isFlagged
+                    viewModel: .init(
+                        todo: todo,
+                        todoProvider: todoProvider,
+                        notificationClient: notificationClient
+                    )
                 )
             }
             .environment(\.locale, Locale(identifier: "ja-JP"))
@@ -187,12 +151,11 @@ struct TodoDetailView_Previews: PreviewProvider {
 
             NavigationView {
                 TodoDetailView(
-                    id: todo.id,
-                    name: todo.name,
-                    isCompleted: todo.isCompleted,
-                    isNotified: true,
-                    notifiedDate: Date(),
-                    isFlagged: todo.isFlagged
+                    viewModel: .init(
+                        todo: todo,
+                        todoProvider: todoProvider,
+                        notificationClient: notificationClient
+                    )
                 )
             }
             .environment(\.locale, Locale(identifier: "ja-JP"))
@@ -201,3 +164,5 @@ struct TodoDetailView_Previews: PreviewProvider {
         }
     }
 }
+
+#endif
