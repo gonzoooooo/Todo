@@ -64,8 +64,6 @@ public struct TodoClient {
             todo.modifiedDate = Date()
 
             todo.order = try maxOrder() + 1
-
-            try viewContext.save()
         }
     }
 
@@ -90,8 +88,6 @@ public struct TodoClient {
             todo.isCompleted = isCompleted
             todo.isFlagged = isFlagged
             todo.modifiedDate = Date()
-
-            try viewContext.save()
         }
     }
 
@@ -102,8 +98,6 @@ public struct TodoClient {
             for (index, todo) in objectIDs.map({ viewContext.object(with: $0) as! Todo }).enumerated() {
                 todo.order = Int64(index + 1)
             }
-
-            try viewContext.save()
 //        }
     }
 
@@ -131,25 +125,23 @@ public struct TodoClient {
         try await changeCompleteTodo(id: id, isComplete: true)
     }
 
-    public func delete(identifiedBy objectIDs: [NSManagedObjectID]) async throws {
+    public func delete(identifiedBy objectIDs: [NSManagedObjectID]) async {
         let viewContext = persistence.container.viewContext
 
         // FIXME: Should use background view context
-        try await viewContext.perform {
+        await viewContext.perform {
             objectIDs.forEach { objectID in
                 let todo = viewContext.object(with: objectID)
                 viewContext.delete(todo)
             }
-
-            try viewContext.save()
         }
     }
 
-    public func delete(ids: Set<UUID>) async throws {
+    public func delete(ids: Set<UUID>) async {
         let viewContext = persistence.container.viewContext
 
         // FIXME: Should use background view context
-        try await viewContext.perform {
+        await viewContext.perform {
             let request = Todo.fetchRequest()
 
             for id in ids {
@@ -159,8 +151,12 @@ public struct TodoClient {
 
                 todos.forEach { viewContext.delete($0) }
             }
+        }
+    }
 
-            try viewContext.save()
+    public func saveIfNeeded() throws {
+        if persistence.container.viewContext.hasChanges {
+            try persistence.container.viewContext.save()
         }
     }
 

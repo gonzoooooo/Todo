@@ -60,15 +60,14 @@ struct TodoDetailView: View {
                 }
             }
         }
+        .onDisappear(perform: viewModel.onDisappear)
         .confirmationDialog(
             Text("Remove Task"),
             isPresented: $viewModel.presentedConfirmationForRemoveTask
         ) {
             Button(role: .destructive) {
-                Task {
-                    await viewModel.delete()
-                    presentationMode.wrappedValue.dismiss()
-                }
+                presentationMode.wrappedValue.dismiss()
+                viewModel.delete()
             } label: {
                 Text("Remove task")
             }

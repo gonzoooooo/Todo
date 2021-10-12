@@ -68,7 +68,14 @@ final class TodoDetailViewModel: ObservableObject {
         }
     }
 
-    func delete() async {
-        try? await todoClient.delete(ids: [todo.id])
+    func delete() {
+        let id = todo.id
+        Task {
+            await todoClient.delete(ids: [id])
+        }
+    }
+
+    func onDisappear() {
+        try? todoClient.saveIfNeeded()
     }
 }

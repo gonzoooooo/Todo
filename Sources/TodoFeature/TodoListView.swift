@@ -38,7 +38,7 @@ public struct TodoListView: View {
                             Button(role: .destructive) {
                                 Task {
                                     do {
-                                        try await viewModel.deleteTodos(ids: [todo.id])
+                                        await viewModel.deleteTodos(ids: [todo.id])
                                     } catch {
                                         print("error: \(error)")
                                     }
@@ -55,7 +55,7 @@ public struct TodoListView: View {
             .onDelete { index in
                 Task {
                     do {
-                        try await viewModel.deleteTodos(offsets: index)
+                        await viewModel.deleteTodos(offsets: index)
                     } catch {
                         print("error: \(error)")
                     }
@@ -93,7 +93,7 @@ public struct TodoListView: View {
         ) {
             Button(role: .destructive) {
                 Task {
-                    try? await viewModel.deleteTodos(ids: viewModel.selection)
+                    await viewModel.deleteTodos(ids: viewModel.selection)
                     viewModel.selection = []
                 }
             } label: {

@@ -51,6 +51,7 @@ struct NewTodoView: View {
                 }
             }
         }
+        .onDisappear(perform: viewModel.onDisappear)
         .navigationTitle("New Task")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

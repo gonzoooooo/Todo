@@ -50,4 +50,8 @@ final class NewTodoViewModel: ObservableObject {
             print("Error: \(error)")
         }
     }
+
+    func onDisappear() {
+        try? todoClient.saveIfNeeded()
+    }
 }

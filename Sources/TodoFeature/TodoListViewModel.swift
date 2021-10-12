@@ -110,12 +110,12 @@ public final class TodoListViewModel: NSObject, ObservableObject {
         }
     }
 
-    func deleteTodos(offsets: IndexSet) async throws {
-        try await todoClient.delete(identifiedBy: offsets.map { todos[$0].objectID })
+    func deleteTodos(offsets: IndexSet) async {
+        await todoClient.delete(identifiedBy: offsets.map { todos[$0].objectID })
     }
 
-    func deleteTodos(ids: Set<UUID>) async throws {
-        try await todoClient.delete(ids: ids)
+    func deleteTodos(ids: Set<UUID>) async {
+        await todoClient.delete(ids: ids)
     }
 
     func todoListRowViewModel(todo: Todo) -> TodoListRowViewModel {
@@ -137,6 +137,8 @@ public final class TodoListViewModel: NSObject, ObservableObject {
     @objc
     func contextObjectsDidChange(_ notification: Notification) {
         DispatchQueue.main.async {
+            // needed?
+            try? self.todoClient.saveIfNeeded()
             self.fetch()
         }
     }
