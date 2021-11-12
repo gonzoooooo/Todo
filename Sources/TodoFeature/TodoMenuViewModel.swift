@@ -20,6 +20,7 @@ public final class TodoMenuViewModel: ObservableObject {
         return .init(
             todoClient: todoClient,
             notificationClient: notificationClient,
+            isHiddenUnflaggedTodos: buttonType == .flagged,
             defaultNavigationTitle: navigationTitle(buttonType: buttonType)
         )
     }
