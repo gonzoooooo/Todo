@@ -31,6 +31,7 @@ struct TodoApp: App {
                             notificationClient: notificationClient
                         )
                     )
+                    TodoListView(viewModel: todoListViewModel)
                 } else {
                     TodoListView(
                         viewModel: .init(
@@ -42,5 +43,13 @@ struct TodoApp: App {
             }
             .tint(.accentColor)
         }
+    }
+
+    private var todoListViewModel: TodoListViewModel {
+        return .init(
+            todoClient: todoClient,
+            notificationClient: notificationClient,
+            defaultNavigationTitle: String(localized: "All")
+        )
     }
 }

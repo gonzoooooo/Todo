@@ -3,9 +3,6 @@ import SwiftUI
 
 @available(iOS 15, *)
 public struct TodoMenuView: View {
-    @State
-    private var selection: Int? = 0
-
     @ObservedObject
     private var viewModel: TodoMenuViewModel
 
@@ -15,7 +12,7 @@ public struct TodoMenuView: View {
 
     public var body: some View {
         List {
-            NavigationLink(tag: 0, selection: $selection) {
+            NavigationLink() {
                 TodoListView(viewModel: viewModel.todoListViewModel(buttonType: .all))
             } label: {
                 HStack {
@@ -28,7 +25,7 @@ public struct TodoMenuView: View {
                 }
             }
 
-            NavigationLink(tag: 1, selection: $selection) {
+            NavigationLink() {
                 TodoListView(viewModel: viewModel.todoListViewModel(buttonType: .flagged))
             } label: {
                 HStack {
